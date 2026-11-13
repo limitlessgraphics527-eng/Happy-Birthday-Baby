@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Birthday Surprise</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(
+    135deg,
+    #ffd6e7,
+    #ffb6d5,
+    #f783b8,
+    #ffd9e8
+  );
+  overflow-x: hidden;
+}
+
+.float {
+  position: fixed;
+  bottom: -30px;
+  animation: floatUp 7s linear forwards;
+  opacity: 0.8;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.card {
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(255,255,255,0.7);
+  max-width: 480px;
+  width: 100%;
+  padding: 28px;
+  border-radius: 30px;
+  box-shadow: 0 15px 40px rgba(173,35,96,0.25);
+  text-align: center;
+  animation: appear 1s ease;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.heart {
+  font-size: 42px;
+  animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+h1 {
+  color: #9e1458;
+  font-size: 30px;
+  margin: 15px 0;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #f783b8;
+  border-radius: 15px;
+  font-size: 16px;
+  text-align: center;
+  outline: none;
+  margin: 15px 0;
+}
+
+button {
+  background: #c92c79;
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background: #9e1458;
+}
+
+#error {
+  color: #9e1458;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+#birthdayContent {
+  display: none;
+}
+
+.video-wrapper {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid white;
+  background: black;
+  margin-top: 20px;
+  box-shadow: 0 10px 25px rgba(158,20,88,0.25);
+}
+
+video {
+  width: 100%;
+  display: block;
+  height: auto;
+  max-height: 600px;
+}
+
+.creator {
+  color: #9e1458;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(158,20,88,0.2);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 22px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<script>
+const icons = ["💕", "✨", "💗", "🎀", "♡"];
+
+function createFloat() {
+  const el = document.createElement("div");
+  el.className = "float";
+  el.textContent = icons[Math.floor(Math.random() * icons.length)];
+  el.style.left = Math.random() * 100 + "vw";
+  el.style.fontSize = (14 + Math.random() * 26) + "px";
+  el.style.animationDuration = (5 + Math.random() * 4) + "s";
+
+  document.body.appendChild(el);
+
+  setTimeout(() => el.remove(), 9000);
+}
+
+setInterval(createFloat, 700);
+</script>
+
+<div class="container">
+
+  <!-- Password Screen -->
+  <div class="card" id="passwordScreen">
+
+    <div class="heart">💕</div>
+
+    <h1>Enter Password</h1>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter your password"
+      autocomplete="off"
+    >
+
+    <button onclick="unlockBirthday()">Unlock Surprise 💗</button>
+
+    <div id="error"></div>
+
+  </div>
+
+  <!-- Birthday Video Screen -->
+  <div class="card" id="birthdayContent">
+
+    <div class="heart">💕</div>
+
+    <h1>Happy Birthday Beautiful</h1>
+
+    <div class="video-wrapper">
+      <video id="birthdayVideo" controls playsinline preload="auto">
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support video.
+      </video>
+    </div>
+
+    <div class="creator">
+      Created by Limitless Graphics By Thea
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function unlockBirthday() {
+
+  const enteredPassword =
+    document.getElementById("password").value;
+
+  if (enteredPassword === "Delyse Wilson") {
+
+    document.getElementById("passwordScreen").style.display = "none";
+
+    document.getElementById("birthdayContent").style.display = "block";
+
+    const video = document.getElementById("birthdayVideo");
+
+    video.play().catch(() => {
+      // Visitor can press play if automatic playback is blocked.
+    });
+
+  } else {
+
+    document.getElementById("error").textContent =
+      "Incorrect password. Try again 💗";
+
+  }
+}
+
+document.getElementById("password").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    unlockBirthday();
+  }
+});
+</script>
+
+</body>
+</html>
